@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: "影片證據解析"
+  short_description: "將影片證據包解析為可追溯的畫面操作、流程、欄位與決策知識"
+  default_prompt: "Use $analyze-video-evidence to analyze a selected BU video evidence package into traceable workflow knowledge."
+policy:
+  allow_implicit_invocation: true

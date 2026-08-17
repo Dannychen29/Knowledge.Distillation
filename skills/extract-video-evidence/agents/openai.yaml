@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: "影片證據擷取"
+  short_description: "從長影片選出可追溯的關鍵操作、決策與例外證據片段"
+  default_prompt: "Use $extract-video-evidence to reduce this authorized BU recording into a traceable evidence package."
+policy:
+  allow_implicit_invocation: true

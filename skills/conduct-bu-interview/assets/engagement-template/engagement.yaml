@@ -1,0 +1,22 @@
+engagement_id: ""
+title: ""
+status: intake
+created_at: ""
+updated_at: ""
+storage:
+  root: ''
+  engagement_path: ''
+  confirmed_at: ''
+participant:
+  role: ""
+  organization_unit: ""
+scope:
+  objective: ""
+  expected_outcome: ""
+  in_scope: []
+  out_of_scope: []
+authorization:
+  evidence_use_confirmed: false
+  screen_recording_confirmed: false
+  microphone_recording_confirmed: false
+current_gate: requirements_confirmation

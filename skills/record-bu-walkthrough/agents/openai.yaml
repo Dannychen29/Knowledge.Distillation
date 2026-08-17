@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: "螢幕 walkthrough 錄製"
+  short_description: "在明確授權下錄製業務畫面操作與口述說明，並附加到目前案件"
+  default_prompt: "Use $record-bu-walkthrough to record an authorized business screen walkthrough and attach it to the current engagement."
+policy:
+  allow_implicit_invocation: true

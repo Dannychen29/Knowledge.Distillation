@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: "BU 知識萃取"
+  short_description: "將訪談與證據蒸餾成可直接建立 Solution 的 BRD 與必要知識資料"
+  default_prompt: "Use $distill-bu-knowledge to produce an approved solution-ready BRD and, only when justified, reusable knowledge data."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,14 @@
+process_overview_confirmed: false
+covered_topics: []
+information_gaps: []
+development_blockers: []
+evidence_requirements: []
+requested_evidence: []
+received_evidence: []
+accepted_limitations: []
+readiness_basis:
+  requirement_confirmed: false
+  process_landscape_confirmed: false
+  material_gaps_resolved_or_accepted: false
+  development_blockers_resolved_or_accepted: false
+ready_for_distillation: false

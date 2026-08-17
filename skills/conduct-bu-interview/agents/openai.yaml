@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: "BU 需求訪談"
+  short_description: "建立 BU 案件並以一問一答方式確認需求、缺口與必要證據"
+  default_prompt: "Use $conduct-bu-interview to confirm one external case location, create a BU engagement, and interview me one question at a time."
+policy:
+  allow_implicit_invocation: true

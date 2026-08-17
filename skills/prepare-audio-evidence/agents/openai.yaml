@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: "音訊證據整理"
+  short_description: "將授權音訊或影片語音軌整理成可追溯、含時間碼的證據包"
+  default_prompt: "Use $prepare-audio-evidence to turn this authorized BU audio into a traceable evidence package."
+policy:
+  allow_implicit_invocation: true
