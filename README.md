@@ -18,7 +18,6 @@
     prepare-audio-evidence/          # 選用：音訊證據整理
     extract-video-evidence/          # 選用：長影片的重點證據萃取
     analyze-video-evidence/          # 選用：分析附時間碼的影片證據
-    rma-accuity-risk-rating/         # RMA 與 Bankers Almanac 風險評級表
 ```
 
 ## 主要工作流
@@ -42,15 +41,6 @@ bu-knowledge-workflow
 - 通用技能不保存個案事實；個案資料與產出應留在各自的 `runs/` 工作目錄。
 - 建置解決方案前，先取得參與者對萃取知識的確認。
 - 涉及螢幕錄製或麥克風時，必須先取得明確同意。
-
-## RMA 風險評級
-
-`rma-accuity-risk-rating` 僅填寫由 BIC 相符的 Bankers Almanac（Accuity）結果確認之欄位，並保留人工覆核與來源追溯。它不執行 CDD、EDD、PEP、AML 問卷或 AML 提交。
-
-其中 office classification 的映射為：
-
-- `Bank · Registered Office, Head Office` → `Headquarter`
-- `Bank Branch` → `Branch`
 
 ## 驗證技能結構
 
