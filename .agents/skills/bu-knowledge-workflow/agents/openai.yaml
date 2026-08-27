@@ -1,0 +1,5 @@
+interface:
+  display_name: "BU Knowledge Workflow"
+  short_description: "在明確啟動後協調 BU 訪談、蒸餾、建置與迭代驗證"
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,80 @@
+# Canonical shape for output/implementation-spec.yaml.
+# Values below are illustrative placeholders, not business facts.
+spec_id: SPEC-<run>-v<N>
+source_evidence:
+  - evidence_id: EVD-001
+    source: <file-or-system>
+    location: <page-cell-url-or-record>
+    status: confirmed # confirmed | inferred | unresolved
+
+scope:
+  objective: <business outcome>
+  included_processes: [PROC-001]
+  excluded_processes:
+    - process: <process id or name>
+      reason: <why excluded now>
+  users: [<role>]
+  constraints: [<constraint>]
+
+stages:
+  - stage_id: STG-001
+    name: <stage name>
+    owner: <role>
+    inputs:
+      - input_id: IN-001
+        artifact_or_data: <name>
+        source_system: <system id>
+        required: true
+    operations:
+      - operation_id: OP-001
+        system_id: SYS-001
+        start_context: <page, record, or local file>
+        navigation: [<menu or page>, <subpage>]
+        ui_action: <click/type/query/download/open; unresolved if unknown>
+        output_artifact: <download/export/query result or none>
+        extracted_fields: [FIELD-001]
+        evidence_id: EVD-001
+        status: confirmed # confirmed | inferred | unresolved
+    outputs:
+      - output_id: OUT-001
+        artifact_or_data: <name>
+        destination: <system, file, or role>
+    validation:
+      - <observable check>
+
+systems:
+  - system_id: SYS-001
+    name: <system name>
+    access: <URL, application, file path, or unresolved>
+    access_constraint: <permission/session/none>
+
+field_mappings:
+  - mapping_id: MAP-001
+    source_system: SYS-001
+    source_field: <field or evidence>
+    transformation: <rule or none>
+    target: <target field, worksheet/cell, or output key>
+    evidence_id: EVD-001
+    status: confirmed # confirmed | inferred | unresolved | manual_pending
+    human_control: <required review or none>
+
+decisions:
+  - decision_id: DEC-001
+    condition: <machine-checkable or human condition>
+    outcome: <result>
+    owner: <role/system>
+    evidence_id: EVD-001
+    status: confirmed
+
+exceptions:
+  - exception_id: EXC-001
+    trigger: <condition>
+    handling: <human action or system action>
+    owner: <role>
+    status: unresolved
+
+acceptance_cases:
+  - case_id: AC-001
+    scenario: <representative case>
+    expected_result: <observable outcome>
+    reviewer: <BU role>
