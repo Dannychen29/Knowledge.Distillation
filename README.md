@@ -1,123 +1,59 @@
-# Knowledge Distillation Codex Skills
+# BU 知識萃取工作流技能集
 
-This repository contains Codex skills for a knowledge distillation workflow.
+這個專案提供一套以 Codex 為核心、可重複使用的商業單位（BU）知識萃取技能。其目標是把訪談、文件、畫面操作與影音證據，轉換為可追溯、可確認且可用來建置解決方案的規格與工作成果。
 
-Knowledge distillation is the process of turning business-user expertise, operational know-how, evidence, decisions, exceptions, and workflow details into structured knowledge that Codex can review, trace, validate, and use to build downstream solutions.
+## 技能位置與結構
 
-The goal of this package is not just to summarize what a business user says. The goal is to help Codex collect enough approved evidence to understand how work is actually done, identify what is known or unknown, preserve source traceability, and produce implementation-ready knowledge without guessing.
-
-## What These Skills Help Codex Do
-
-- Conduct a structured BU interview.
-- Ask one focused question at a time.
-- Capture business context, workflow steps, decisions, exceptions, controls, and acceptance criteria.
-- Request only the smallest evidence needed to close real knowledge gaps.
-- Process authorized documents, audio, screenshots, screen recordings, and transcripts.
-- Preserve evidence IDs, paths, hashes, timecodes, confidence labels, and unresolved gaps.
-- Produce a canonical `BRD.html` for human review and downstream solution building.
-- Build a suitable solution only after the knowledge has been reviewed and approved.
-
-## Included Skills
-
-| Skill | Purpose |
-| --- | --- |
-| `conduct-bu-interview` | Guides a BU discovery interview from case creation through requirement confirmation, workflow mapping, adaptive questioning, evidence request, and handoff to distillation. |
-| `record-bu-walkthrough` | Controls an authorized Windows screen walkthrough with microphone when a real screen operation is needed to close a material gap. |
-| `distill-bu-knowledge` | Converts one confirmed interview package and authorized evidence into a traceable, solution-ready canonical `BRD.html`. |
-| `prepare-audio-evidence` | Prepares authorized audio or spoken evidence as a compact timecoded evidence package. |
-| `extract-video-evidence` | Reduces authorized screen recordings into selected timecoded clips, frames, transcript slices, and evidence manifests. |
-| `analyze-video-evidence` | Analyzes selected video evidence packages to extract screen actions, fields, workflow steps, decisions, exceptions, pain points, and open questions. |
-| `build-bu-solution` | Selects and builds the smallest suitable solution from one participant-approved knowledge version. |
-
-## Skill Workflow
-
-The intended workflow is:
+請從專案根目錄執行工作；唯一的技能目錄為 `.agents/skills/`。
 
 ```text
-conduct-bu-interview
-  -> optional record-bu-walkthrough
+.agents/
+  skills/
+    bu-knowledge-workflow/           # 工作流入口與共用契約
+    conduct-bu-interview/            # 第一階段：需求訪談與證據缺口辨識
+    distill-bu-knowledge/            # 第二階段：知識萃取與確認
+    build-bu-solution/               # 第三階段：選擇並建置適切解決方案
+    validate-and-improve-solution/   # 第四階段：驗證、回饋與修正
+    record-bu-walkthrough/           # 選用：授權的螢幕與麥克風操作錄製
+    prepare-audio-evidence/          # 選用：音訊證據整理
+    extract-video-evidence/          # 選用：長影片的重點證據萃取
+    analyze-video-evidence/          # 選用：分析附時間碼的影片證據
+    rma-accuity-risk-rating/         # RMA 與 Bankers Almanac 風險評級表
+```
+
+## 主要工作流
+
+新案件或續辦案件請由 `$bu-knowledge-workflow` 開始。它會依需求引導各階段，並在每個關卡保留狀態、輸出與後續行動。
+
+```text
+bu-knowledge-workflow
+  -> conduct-bu-interview
   -> distill-bu-knowledge
-     -> optional prepare-audio-evidence
-     -> optional extract-video-evidence
-        -> optional analyze-video-evidence
   -> build-bu-solution
+  -> validate-and-improve-solution
 ```
 
-## Typical Usage
+影音與畫面相關技能依證據類型按需使用，不會自行推進主要工作流。
 
-Start with:
+## 使用原則
 
-```text
-$conduct-bu-interview
+- 僅使用已授權的訪談、文件、影音與畫面證據。
+- 保留來源、時間碼、確認狀態與尚待釐清事項；不以推測補足缺漏。
+- 通用技能不保存個案事實；個案資料與產出應留在各自的 `runs/` 工作目錄。
+- 建置解決方案前，先取得參與者對萃取知識的確認。
+- 涉及螢幕錄製或麥克風時，必須先取得明確同意。
+
+## RMA 風險評級
+
+`rma-accuity-risk-rating` 僅填寫由 BIC 相符的 Bankers Almanac（Accuity）結果確認之欄位，並保留人工覆核與來源追溯。它不執行 CDD、EDD、PEP、AML 問卷或 AML 提交。
+
+其中 office classification 的映射為：
+
+- `Bank · Registered Office, Head Office` → `Headquarter`
+- `Bank Branch` → `Branch`
+
+## 驗證技能結構
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .agents/skills/bu-knowledge-workflow/scripts/validate-agent-structure.ps1
 ```
-
-Use it when a BU participant needs to explain a business need, workflow, operational process, or pain point. The interview skill should confirm the requirement, map the workflow, identify gaps, request targeted evidence, and prepare the engagement for knowledge distillation.
-
-After the interview package is confirmed, use:
-
-```text
-$distill-bu-knowledge
-```
-
-This skill turns the confirmed interview and authorized evidence into a canonical `BRD.html`. The BRD should include workflow steps, decisions, data flows, fields, exceptions, controls, evidence links, confidence labels, open questions, and development readiness.
-
-After the knowledge is approved, use:
-
-```text
-$build-bu-solution
-```
-
-This skill decides what kind of solution is appropriate. The result might be a Skill, Script, Prompt, guided workflow, document template, knowledge base, tool specification, API integration, or another justified deliverable.
-
-## Evidence Handling Principles
-
-- Use only authorized evidence.
-- Do not record screen or microphone without explicit permission.
-- Do not copy credentials, unnecessary personal information, or unrelated sensitive material into reusable skills.
-- Treat spoken descriptions as stated evidence, not visual proof.
-- Treat screenshots as visible state, not proof of a click or causal action.
-- Use timecoded video evidence when screen sequence, field mapping, or visible output matters.
-- Preserve uncertainty instead of inventing missing information.
-
-## Knowledge Quality Principles
-
-- Keep every skill domain-neutral and reusable.
-- Store engagement-specific facts in engagement artifacts, not in the skill package.
-- Separate observed, stated, corroborated, inferred, and unresolved claims.
-- Preserve source references for material claims.
-- Do not infer business rules from memory, general knowledge, folder names, test data, or unrelated engagements.
-- Keep solution-building gated behind participant-approved distilled knowledge.
-
-## Expected Folder Structure
-
-```text
-skills/
-  analyze-video-evidence/
-    SKILL.md
-  build-bu-solution/
-    SKILL.md
-  conduct-bu-interview/
-    SKILL.md
-  distill-bu-knowledge/
-    SKILL.md
-  extract-video-evidence/
-    SKILL.md
-  prepare-audio-evidence/
-    SKILL.md
-  record-bu-walkthrough/
-    SKILL.md
-README.md
-.gitignore
-```
-
-Each skill may also include supporting `references/`, `scripts/`, `agents/`, or `assets/` folders.
-
-## Maintenance Notes
-
-When updating this package:
-
-1. Update only the relevant files under `skills/`.
-2. Keep skill instructions generic and reusable.
-3. Remove generated cache files such as `__pycache__`, `.pyc`, logs, temporary files, and test outputs.
-4. Confirm every skill still has a valid `SKILL.md`.
-5. Commit only the skill package and general README content.
