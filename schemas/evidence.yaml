@@ -1,0 +1,15 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: array
+items:
+  type: object
+  additionalProperties: false
+  required: [id, source, locator, source_group, source_version, excerpt, speaker, availability]
+  properties:
+    id: {type: string, pattern: '^EVD-[A-Za-z0-9-]+$'}
+    source: {type: string, minLength: 1}
+    locator: {type: string, minLength: 1}
+    source_group: {type: string, minLength: 1}
+    source_version: {type: string, minLength: 1}
+    excerpt: {type: string, minLength: 1}
+    speaker: {type: [string, 'null']}
+    availability: {enum: [available, unavailable]}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "擷取業務知識"
+  short_description: "結合文件與 ACTA 訪談，挖掘資深員工的判斷線索、理由及例外情境"
+  default_prompt: "使用 $elicit-business-knowledge 處理目前的部門知識工作。"

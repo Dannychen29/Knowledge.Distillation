@@ -37,7 +37,9 @@ def main() -> int:
     skills_root = Path(__file__).resolve().parents[2]
     transcriber = skills_root / "prepare-audio-evidence" / "scripts" / "transcribe_media.py"
     validator = skills_root / "prepare-audio-evidence" / "scripts" / "validate_audio_package.py"
-    package = engagement / "10_evidence" / "transcripts" / args.evidence_id
+    if not args.evidence_id.startswith("EVD-") or any(c in args.evidence_id for c in "/\\"):
+        parser.error("evidence-id must be an EVD identifier without path separators")
+    package = engagement / "evidence" / "audio" / args.evidence_id
 
     command = [
         sys.executable,
@@ -71,7 +73,7 @@ def main() -> int:
         "transcript_package": str(package),
         "transcript_json": str(package / "transcript.json"),
         "transcript_text": str(package / "transcript.txt"),
-        "next_action": "return_to_conduct-bu-interview_for_gap_review",
+        "next_action": "return_to_elicit-business-knowledge_for_gap_review",
     }
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0

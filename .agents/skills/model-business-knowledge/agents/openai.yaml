@@ -1,0 +1,4 @@
+interface:
+  display_name: "建立業務知識模型"
+  short_description: "依據證據建構 CommonKADS 知識模型，保留專家視角及未解決問題"
+  default_prompt: "使用 $model-business-knowledge 處理目前的部門知識工作。"

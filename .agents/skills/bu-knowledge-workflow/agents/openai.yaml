@@ -1,5 +1,6 @@
 interface:
   display_name: "BU Knowledge Workflow"
-  short_description: "在明確啟動後協調 BU 訪談、蒸餾、建置與迭代驗證"
+  short_description: "協調部門與專家知識蒸餾、模型驗證及可選的業務產品產出流程"
+  default_prompt: "使用 $bu-knowledge-workflow 幫我從文件與訪談建立部門知識庫。"
 policy:
   allow_implicit_invocation: false

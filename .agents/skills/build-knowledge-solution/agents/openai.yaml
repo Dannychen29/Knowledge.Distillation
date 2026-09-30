@@ -1,0 +1,4 @@
+interface:
+  display_name: "由知識產生業務產品"
+  short_description: "依知識版本檢查涵蓋範圍，產生可追溯的業務 Skill 或其他產品"
+  default_prompt: "使用 $build-knowledge-solution 處理目前的部門知識工作。"

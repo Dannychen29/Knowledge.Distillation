@@ -1,0 +1,4 @@
+interface:
+  display_name: "界定知識蒸餾範圍"
+  short_description: "盤點部門任務、專家及可用來源，界定本次知識蒸餾的範圍與優先順序"
+  default_prompt: "使用 $frame-knowledge-engagement 處理目前的部門知識工作。"

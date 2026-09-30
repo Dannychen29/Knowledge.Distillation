@@ -1,0 +1,18 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+additionalProperties: false
+required: [schema_version, run_id, department, domain, entry_mode, objective, users, included, excluded, participants, resources, priority_reason, scope_confirmation]
+properties:
+  schema_version: {const: 1}
+  run_id: {type: string, pattern: '^RUN-[A-Za-z0-9-]+$'}
+  department: {type: string, minLength: 1}
+  domain: {type: string, minLength: 1}
+  entry_mode: {enum: [department-first, expert-first]}
+  objective: {type: string, minLength: 1}
+  users: {type: array, minItems: 1, items: {type: string, minLength: 1}}
+  included: {type: array, minItems: 1, items: {type: string, minLength: 1}}
+  excluded: {type: array, items: {type: string, minLength: 1}}
+  participants: {type: array, minItems: 1, items: {type: string, minLength: 1}}
+  resources: {type: array, items: {type: string, minLength: 1}}
+  priority_reason: {type: string, minLength: 1}
+  scope_confirmation: {type: string, minLength: 1}

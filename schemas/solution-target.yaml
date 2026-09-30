@@ -1,0 +1,19 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+additionalProperties: false
+required: [solution_id, release_id, product, mode, user, outcome, required_task_refs, optional_task_refs, allowed_expert_refs, inputs, outputs, tools, human_controls, exclusions]
+properties:
+  solution_id: {type: string, pattern: '^[a-z0-9][a-z0-9-]*$'}
+  release_id: {type: string, minLength: 1}
+  product: {enum: [skill, knowledge-base, sop, prompt, script]}
+  mode: {enum: [advisory, execution]}
+  user: {type: string, minLength: 1}
+  outcome: {type: string, minLength: 1}
+  required_task_refs: {type: array, minItems: 1, uniqueItems: true, items: {type: string, minLength: 1}}
+  optional_task_refs: {type: array, uniqueItems: true, items: {type: string, minLength: 1}}
+  allowed_expert_refs: {type: array, uniqueItems: true, items: {type: string, minLength: 1}}
+  inputs: {type: array, minItems: 1, items: {type: string, minLength: 1}}
+  outputs: {type: array, minItems: 1, items: {type: string, minLength: 1}}
+  tools: {type: array, items: {type: string, minLength: 1}}
+  human_controls: {type: array, items: {type: string, minLength: 1}}
+  exclusions: {type: array, items: {type: string, minLength: 1}}

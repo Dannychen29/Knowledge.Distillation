@@ -1,6 +1,6 @@
 ---
 name: analyze-video-evidence
-description: 分析單一 BU engagement 所選取、附有 timecode 的 video evidence package，產出可追溯的畫面操作、欄位、workflow step、decision rationale、heuristic、例外、pain point 與 open question。由 distill-bu-knowledge 在 extract-video-evidence 後呼叫；不得分析無關的完整錄影或核准 business knowledge。
+description: 分析已選取的影片證據，將操作、決策理由、例外及缺口回傳 elicit-business-knowledge；結果是中間候選主張，不是已確認的知識模型。
 ---
 
 # 分析 Video Evidence
@@ -17,7 +17,7 @@ description: 分析單一 BU engagement 所選取、附有 timecode 的 video ev
 8. 保留 loop、retry、alternative、contradiction 與缺失資訊。
 9. 在綜整前，對每個選取的 segment 建立 evidence-atom pass。保留每一個精確的 field/question identifier、enumerated value、threshold、conditional phrase、source fallback、必要 screenshot 或保留 attachment。為每個 selected segment 給定 `consumed`、`duplicate`、`out_of_scope` 或 `unresolved` 的 disposition；籠統 workflow step 不算已消耗其 field-level atom。
 10. 視覺 evidence 缺席時，明確的 transcript fact 仍維持 `stated`。不得以 `unknown` 取代已 stated 的 field、source、rule 或 deliverable component；若 readiness 需要 visual proof，應記錄 stated value 及其連結的 observation gap。
-11. 將結果寫入 `20_distilled/derived/video/<evidence-id>/analysis/`，使用穩定的 segment ID 與 timecode，然後執行 `scripts/validate_knowledge_package.py`。
-12. 將 structured knowledge 與 targeted gap 回傳給 `$distill-bu-knowledge`。若 visual evidence 不足以確認與開發相關的 I/O，應索取最小且具體的 follow-up evidence，不得虛構 action。
+11. 將結果寫入 active run 的 `evidence/video/<evidence-id>/analysis/`，保留 segment ID/timecode，執行 `scripts/validate_knowledge_package.py`。
+12. 將候選主張與 targeted gap 回傳 `$elicit-business-knowledge`，再由 model Skill 映射至 canonical YAML。不可用 worker 的 corroborated 自動宣告 shared 或 scenario-tested。
 
 產出 `analysis/knowledge.json` 後，務必執行 `scripts/validate_knowledge_package.py`。只有有效的 package 才能合併至 engagement knowledge。

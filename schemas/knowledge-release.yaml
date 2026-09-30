@@ -1,0 +1,94 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+additionalProperties: false
+required: [manifest, context, domain, inference, task, communication, expert-perspectives, cases, evidence-index, gaps, review]
+properties:
+  manifest:
+    type: object
+    additionalProperties: false
+    required: [schema_version, release_id, department, domain, scope, exclusions, base_release, empty_sections]
+    properties:
+      schema_version: {const: 1}
+      release_id: {type: string, pattern: '^[A-Za-z0-9][A-Za-z0-9-]*$'}
+      department: {type: string, pattern: '^[a-z0-9][a-z0-9-]*$'}
+      domain: {type: string, pattern: '^[a-z0-9][a-z0-9-]*$'}
+      scope: {type: string, minLength: 1}
+      exclusions: {$ref: '#/$defs/strings'}
+      base_release: {type: [string, 'null']}
+      empty_sections: {type: object, additionalProperties: {type: string, minLength: 1}}
+  context: {$ref: '#/$defs/objects'}
+  domain: {$ref: '#/$defs/objects'}
+  inference: {$ref: '#/$defs/objects'}
+  task: {$ref: '#/$defs/objects'}
+  communication: {$ref: '#/$defs/objects'}
+  expert-perspectives: {$ref: '#/$defs/objects'}
+  cases: {$ref: '#/$defs/objects'}
+  evidence-index: {type: array, minItems: 1}
+  gaps:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, question, affects, blocking, status, resolution]
+      properties:
+        id: {type: string, pattern: '^GAP-[A-Za-z0-9-]+$'}
+        question: {type: string, minLength: 1}
+        affects: {$ref: '#/$defs/refs'}
+        blocking: {type: boolean}
+        status: {enum: [open, resolved]}
+        resolution: {type: [string, 'null']}
+  review:
+    type: object
+    additionalProperties: false
+    required: [confirmation, scenarios]
+    properties:
+      confirmation:
+        oneOf:
+          - {type: 'null'}
+          - type: object
+            additionalProperties: false
+            required: [participant, confirmed_at, source, model_digest]
+            properties:
+              participant: {type: string, minLength: 1}
+              confirmed_at: {type: string, minLength: 1}
+              source: {type: string, minLength: 1}
+              model_digest: {$ref: '#/$defs/digest'}
+      scenarios:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [case_ref, knowledge_refs, method, participant, actual, result, source, model_digest]
+          properties:
+            case_ref: {type: string, minLength: 1}
+            knowledge_refs: {$ref: '#/$defs/refs'}
+            method: {enum: [walkthrough, replay]}
+            participant: {type: string, minLength: 1}
+            actual: {type: string, minLength: 1}
+            result: {enum: [pass, fail]}
+            source: {type: string, minLength: 1}
+            model_digest: {$ref: '#/$defs/digest'}
+$defs:
+  digest: {type: string, pattern: '^[a-f0-9]{64}$'}
+  strings: {type: array, uniqueItems: true, items: {type: string, minLength: 1}}
+  refs: {type: array, minItems: 1, uniqueItems: true, items: {type: string, minLength: 1}}
+  objects:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, kind, title, statement, scope, evidence_refs, evidence_mode, validation, sharing, expert_refs, refs, critical, details]
+      properties:
+        id: {type: string, pattern: '^[A-Z]+-[A-Za-z0-9-]+$'}
+        kind: {enum: [context, concept, fact, policy, inference, task, handoff, expert, case, lesson]}
+        title: {type: string, minLength: 1}
+        statement: {type: string, minLength: 1}
+        scope: {type: string, minLength: 1}
+        evidence_refs: {$ref: '#/$defs/refs'}
+        evidence_mode: {enum: [observed, stated, inferred, conflicting, unresolved]}
+        validation: {enum: [draft, participant-confirmed, scenario-tested]}
+        sharing: {enum: [shared, attributed, contested]}
+        expert_refs: {$ref: '#/$defs/strings'}
+        refs: {$ref: '#/$defs/strings'}
+        critical: {type: boolean}
+        details: {type: object, minProperties: 1}

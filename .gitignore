@@ -9,3 +9,9 @@ Thumbs.db
 node_modules/
 .venv/
 venv/
+
+# Raw business material and working sessions stay local.
+runs/
+.tmp/
+.pytest_cache/
+# knowledge/ and solutions/ are opt-in content: inspect before committing.

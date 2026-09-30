@@ -1,0 +1,4 @@
+interface:
+  display_name: "驗證與發布知識"
+  short_description: "核對來源、參與者確認及案例結果，產出可追溯的部門知識版本"
+  default_prompt: "使用 $validate-knowledge-release 處理目前的部門知識工作。"

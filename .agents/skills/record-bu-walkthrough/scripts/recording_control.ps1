@@ -97,8 +97,8 @@ function Test-Mp4Track([string]$Path, [string]$Marker) {
 }
 
 function Update-EvidenceManifest([string]$Engagement, $Item) {
-    $manifestPath = Join-Path $Engagement '10_evidence\evidence-manifest.json'
-    $manifest = if (Test-Path -LiteralPath $manifestPath) { Get-Content -Raw -LiteralPath $manifestPath | ConvertFrom-Json } else { [PSCustomObject]@{ engagement_id = ''; items = @() } }
+    $manifestPath = Join-Path $Engagement 'evidence\recording-manifest.json'
+    $manifest = if (Test-Path -LiteralPath $manifestPath) { Get-Content -Raw -LiteralPath $manifestPath | ConvertFrom-Json } else { [PSCustomObject]@{ engagement_id = (Split-Path $Engagement -Leaf); items = @() } }
     $items = @($manifest.items | Where-Object { $_.evidence_id -ne $Item.evidence_id }) + @($Item)
     $manifest.items = $items
     $manifest | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
@@ -162,7 +162,7 @@ if (-not $candidate) {
     throw 'Game Bar did not produce a new MP4. The target app may not support capture.'
 }
 
-$videoDir = Join-Path $engagement '10_evidence\video'
+$videoDir = Join-Path $engagement 'evidence\recordings'
 if (-not (Test-Path -LiteralPath $videoDir)) { New-Item -ItemType Directory -Path $videoDir | Out-Null }
 $safeLabel = ($session.label -replace '[^a-zA-Z0-9\p{L}-]+', '-').Trim('-')
 if (-not $safeLabel) { $safeLabel = 'screen-walkthrough' }
@@ -199,7 +199,7 @@ if ($PythonPath -and $hasAudio -and $hasVideo) {
     if ($AllowModelDownload) { $arguments += '--allow-model-download' }
     & $PythonPath @arguments
     if ($LASTEXITCODE -eq 0) {
-        $transcriptPackage = Join-Path $engagement "10_evidence\transcripts\$evidenceId"
+        $transcriptPackage = Join-Path $engagement "evidence\audio\$evidenceId"
         $item.processing_status = 'transcript_ready_for_interview_review'
         $item | Add-Member -NotePropertyName transcript_package -NotePropertyValue $transcriptPackage -Force
         $item | Add-Member -NotePropertyName transcript_path -NotePropertyValue (Join-Path $transcriptPackage 'transcript.json') -Force
