@@ -138,9 +138,10 @@ class KnowledgeWorkflowTests(unittest.TestCase):
 
     def test_init_leaves_unconfirmed_draft(self):
         with tempfile.TemporaryDirectory() as temp:
-            result = kw.initialize(temp, "demo", "area", "expert-first")
+            result = kw.initialize(temp, "demo", "area", "expert-first", "map-first")
             path = Path(result["run_path"])
             self.assertEqual(kw.read(path / "state.yaml")["stage"], "frame")
+            self.assertEqual(kw.read(path / "engagement.yaml")["source_route"], "map-first")
             self.assertIsNone(kw.read(path / "draft" / "review.yaml")["confirmation"])
             with self.assertRaises(kw.ContractError):
                 kw.validate(kw.load_bundle(path / "draft"), release=True)
