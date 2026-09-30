@@ -368,11 +368,15 @@ def verify_solution(release_path, solution):
             "limitation": "Does not prove behavior or truth of test records; inspect artifacts and recorded evidence."}
 
 
-def initialize(runs_root, department, domain, entry_mode, source_route="guided-interview"):
+SOURCE_TYPES = {"document", "form", "process-map", "interview-record", "case", "media", "observation"}
+
+
+def initialize(runs_root, department, domain, entry_mode, source_types=None):
     if not all(re.fullmatch(r"[a-z0-9][a-z0-9-]*", slug) for slug in [department, domain]):
         raise ContractError("Department and domain must be lowercase slugs")
-    if source_route not in {"guided-interview", "document-first", "map-first"}:
-        raise ContractError("Unknown source route")
+    source_types = [] if source_types is None else list(source_types)
+    if len(source_types) != len(set(source_types)) or not set(source_types) <= SOURCE_TYPES:
+        raise ContractError("Unknown or duplicate source type")
     run_id = "RUN-" + datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S-%f")
     path = Path(runs_root).resolve() / run_id
     path.mkdir(parents=True, exist_ok=False)
@@ -382,7 +386,7 @@ def initialize(runs_root, department, domain, entry_mode, source_route="guided-i
                                "next_action": "confirm_scope_and_priority_task", "pending": [], "solution_requested": False,
                                "base_release": None, "release_path": None, "completion": None})
     write(path / "engagement.yaml", {"schema_version": 1, "run_id": run_id, "department": department, "domain": domain,
-                                    "entry_mode": entry_mode, "source_route": source_route,
+                                    "entry_mode": entry_mode, "source_types": source_types,
                                     "objective": "", "users": [], "included": [], "excluded": [],
                                     "participants": [], "resources": [], "priority_reason": "", "scope_confirmation": ""})
     draft = path / "draft"
@@ -428,7 +432,8 @@ def main(argv=None):
     init.add_argument("--department", required=True)
     init.add_argument("--domain", required=True)
     init.add_argument("--entry-mode", choices=["department-first", "expert-first"], default="department-first")
-    init.add_argument("--source-route", choices=["guided-interview", "document-first", "map-first"], default="guided-interview")
+    init.add_argument("--source-type", choices=sorted(SOURCE_TYPES), action="append", default=[],
+                      help="Available material type; repeat for multiple types. Omit when starting from interview.")
     for cmd in ["validate", "digest", "render", "publish"]:
         p = sub.add_parser(cmd)
         p.add_argument("path", type=Path)
@@ -444,7 +449,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         if args.command == "init":
-            result = initialize(args.runs_root, args.department, args.domain, args.entry_mode, args.source_route)
+            result = initialize(args.runs_root, args.department, args.domain, args.entry_mode, args.source_type)
         elif args.command == "check-repo":
             result = check_repo()
         elif args.command == "publish":

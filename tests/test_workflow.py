@@ -138,15 +138,22 @@ class KnowledgeWorkflowTests(unittest.TestCase):
 
     def test_init_leaves_unconfirmed_draft(self):
         with tempfile.TemporaryDirectory() as temp:
-            result = kw.initialize(temp, "demo", "area", "expert-first", "map-first")
+            result = kw.initialize(temp, "demo", "area", "expert-first", ["form", "process-map"])
             path = Path(result["run_path"])
             self.assertEqual(kw.read(path / "state.yaml")["stage"], "frame")
-            self.assertEqual(kw.read(path / "engagement.yaml")["source_route"], "map-first")
+            self.assertEqual(kw.read(path / "engagement.yaml")["source_types"], ["form", "process-map"])
             self.assertIsNone(kw.read(path / "draft" / "review.yaml")["confirmation"])
             with self.assertRaises(kw.ContractError):
                 kw.validate(kw.load_bundle(path / "draft"), release=True)
             with self.assertRaises(kw.ContractError):
                 kw.initialize(temp, "../escape", "area", "expert-first")
+            with self.assertRaises(kw.ContractError):
+                kw.initialize(temp, "demo", "area", "expert-first", ["form", "form"])
+
+    def test_init_without_materials_has_empty_source_types(self):
+        with tempfile.TemporaryDirectory() as temp:
+            result = kw.initialize(temp, "demo", "area", "department-first")
+            self.assertEqual(kw.read(Path(result["run_path"]) / "engagement.yaml")["source_types"], [])
 
     def test_duplicate_yaml_keys_rejected(self):
         with tempfile.TemporaryDirectory() as temp:

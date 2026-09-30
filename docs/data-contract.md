@@ -78,4 +78,4 @@ traceability.yaml 的格式與轉換規則見 [solution contract](../.agents/ski
 
 ## Run
 
-engagement 依 engagement schema；frame 時空草稿可以存在，離開 frame 前必須完整。`entry_mode` 是 department-first/expert-first 的知識視角；`source_route` 是 guided-interview/document-first/map-first 的材料起點。兩者獨立，混合材料選優先處理的起點並保留全部來源。state 記 run_id、stage、status、next_action、pending、solution_requested、base_release、release_path、completion。Codex 更新 state；工具不自動執行訪談或跳 stage。release 完成且未要求 solution，completion=knowledge-only。
+engagement 依 engagement schema；frame 時空草稿可以存在，離開 frame 前必須完整。`entry_mode` 是 department-first/expert-first 的知識視角；`source_types` 是現有材料類型清單，可同時列出 document、form、process-map、interview-record、case、media、observation，沒有材料時為空清單。具體檔案或引用記在 `resources`；後續取得新材料時同步更新，無須擇一材料路線。state 記 run_id、stage、status、next_action、pending、solution_requested、base_release、release_path、completion。Codex 更新 state；工具不自動執行訪談或跳 stage。release 完成且未要求 solution，completion=knowledge-only。
