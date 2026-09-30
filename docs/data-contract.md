@@ -30,7 +30,7 @@
 | sharing | shared/attributed/contested |
 | expert_refs | 專家 EXP ID；attributed 必填；專家物件可指自己 |
 | refs | 本物件理解/執行不可缺的其他知識 ID；coverage 遞迴追蹤 |
-| critical | 是否為此次範圍的重要判斷或必要核心主張；不可為通過驗證降低它 |
+| critical | 是否為此次範圍的重要判斷或必要核心主張；依 engagement 的業務目的及 priority_reason 選定，不以是否能做 Skill 決定；不可為通過驗證降低它 |
 | details | 依 kind 的結構化內容 |
 
 evidence_mode 是來源支持方式；validation 是檢視歷程，兩個軸獨立。observed 不等於正確；stated 可經 participant-confirmed。無充分支持的 inferred 不能只改 status 就當 observed/stated，需補 evidence。shared 至少兩個獨立 source_group 且經參與者確認；這是 MVP 的保守約定，不表示來源多就一定正確。contested 保留不同觀點和 gap。

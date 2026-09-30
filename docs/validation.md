@@ -6,9 +6,9 @@
 
 | 檢查 | 結果 | 能證明什麼 |
 | --- | --- | --- |
-| unittest discover，17 tests | 全部通過 | 來源/依賴/確認/快照/追溯契約的正反例 |
+| unittest discover，18 tests | 全部通過 | 來源/依賴/確認/快照/追溯契約的正反例，包含混合材料入口 |
 | skill-creator quick_validate，10 Skills | 全部通過 | frontmatter、命名及 Skill 基本格式 |
-| check-repo | 通過 | 六核心＋四媒體 Skill、schema 格式、指令及 docs 的相對 reference |
+| check-repo | 通過 | 五主流程＋一選用應用＋四媒體 Skill、schema 格式、指令及 docs 的相對 reference |
 | Python compileall | 通過 | 新程式及保留的 Python 檔可解析 |
 | recording_control.ps1 parser | 通過 | 修改後 PowerShell 語法可解析 |
 | synthetic build_demo | 成功產生 release、手冊與 Skill | source/model/release/solution 格式能銜接 |
@@ -36,6 +36,13 @@ Windows 的 skill-creator 檢查器預設使用系統編碼，第一次檢查遇
 15. 重複 YAML key 不會靜默覆蓋。
 16. schema 與 Skill references。
 17. 另一個案例 pass 不能掩蓋目前版本的 fail。
+18. 無材料時 source_types 為空清單；既有 init 測試也檢查混合材料與重複類型拒絕。
+
+## 架構檢視後的驗證
+
+同日對齊 README、研究依據、資料流與 Skill 指令；程式只調整 Skill 分組的錯誤訊息，資料格式與驗證行為未變。重新執行 18 個測試與 check-repo 通過；10 個 Skill 的 quick_validate、34 份 Markdown 中的 56 個本機連結／章節定位及 git diff --check 通過。目錄盤點另發現四個舊版 Skill 的空資料夾，確認不含檔案後清除；目前可用 Skill 仍為 10 個。
+
+後續補查 Codex／Claude Code 的 GitHub 實作，新增 [操作參考](github-agent-practice.md)。再次按 star、原始操作檔、任務相關性及維護狀態篩選，將五個低採用度專案移出主要引用；該頁記錄保留來源的具體操作、對照的檔案流向及合成資料檢查方法。這是設計與文件查核，不表示外部專案在本環境已安裝或本框架通過真實業務試點。
 
 ## 尚未驗證及限制
 

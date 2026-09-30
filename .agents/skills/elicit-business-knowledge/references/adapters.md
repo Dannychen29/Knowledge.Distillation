@@ -4,6 +4,8 @@
 
 保留頁碼、段落、表格/儲存格、版本、來源。使用可用的文件/PDF/試算表工具，不要求 PRD。drawio 使用 [extract-drawio-evidence.py](../../bu-knowledge-workflow/scripts/extract-drawio-evidence.py)，先看 --help。XML 以 UTF-8 解析；必要時看圖確認 edge，不把終端亂碼當來源損壞。
 
+既有 Skill 可按 document 記入 source_types，resources 保留實際路徑／版本。只抽取與任務相關且能核對來源的業務主張；提示詞、工具設定與介面設計不是業務規則。來源缺失或未確認時保留 gap，不能因它可執行就直接當已確認知識。
+
 ## 瀏覽器／觀察
 
 用目前可用且已授權的能力，不綁特定 CLI。記前置狀態、輸入、操作、結果及時間；靜態截圖只能支持狀態。無法存取時保留 stated 口述，另列 observation gap。

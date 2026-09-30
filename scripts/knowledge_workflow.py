@@ -418,7 +418,7 @@ def check_repo():
     for schema in (ROOT / "schemas").glob("*.yaml"):
         Draft202012Validator.check_schema(read(schema))
     if count != 10:
-        errors.append(f"Expected 6 core + 4 media skills; found {count}")
+        errors.append(f"Expected 5 workflow + 1 optional solution + 4 media skills; found {count}")
     if errors:
         raise ContractError("\n".join(errors))
     return {"status": "pass", "skills": count}

@@ -1,233 +1,178 @@
 # 部門知識蒸餾工作坊
 
-透過文件、訪談、案例與操作觀察，將部門的業務知識及資深員工的判斷經驗整理成可閱讀、可追溯、可再利用的知識庫；需要時，再從這份知識產生業務 Skill 或其他產品。
+透過文件、訪談、案例與操作觀察，保存**部門重要的業務知識**：關鍵規則、判斷線索與理由、例外、交接要求，以及資深員工的經驗與適用邊界。主要成果是可閱讀、可追溯、可更新的部門知識庫。
 
-這是一個由 **Codex 帶領、使用者用自然語言參與**的 MVP。你不需要寫程式或手動填 YAML。你負責說明業務、提供材料、修正理解與確認案例；Codex 負責整理、建模、維護檔案及執行檢查。
+這是一個由 **Codex 帶領、使用者用自然語言參與**的 MVP。你提供業務經驗、材料並修正與確認理解；Codex 整理證據、維護檔案及執行檢查。知識庫發布後就能完成一次蒸餾。需要時，才把其中的知識封裝成 Skill、SOP 或其他使用形式。
 
-目前具備六個核心 Skill、四個選用媒體 Skill、檔案型知識庫格式，以及本機驗證／發布工具。它還不是網站或自動運作的企業知識平台。
+這裡有兩種不同用途的 Skill：`.agents/skills/` 是**執行蒸餾的方法指令**；`solutions/` 裡生成的 Skill 是**部門知識的選用應用**。生成幾個 Skill 不作為蒸餾完成指標。
 
-## 先看這裡：怎麼使用
+## MVP 要完成什麼
 
-在 Codex 開啟這個 repository，使用 **`$bu-knowledge-workflow`**。新工作只有兩種啟動情境：**沒有材料就從訪談開始；有任何材料就全部提供，先盤點再補訪談**。文件、表單、流程圖、訪談紀錄可以同時存在，不需要選一種「優先入口」。若之前已建立 run，則直接續作。最後都會建立同一格式的 Knowledge Release。
+一次先處理一個有清楚邊界的部門任務。選擇依據是錯誤的業務影響、判斷難度、知識是否集中在少數人，以及誰需要接手使用；材料可得性用來安排先後。
 
-| 啟動方式 | 適合情境 | 建議先提供 | Codex 第一輪會做什麼 |
-| --- | --- | --- | --- |
-| **① 從訪談開始** | 手邊沒有可用材料，想挖出資深員工腦中的經驗 | 部門或工作名稱、希望保留的經驗、可受訪的人 | 從工作目標與具體案例開始，畫任務草圖，再追問判斷線索、理由和例外 |
-| **② 從現有材料開始** | 手邊有文件、表單、流程圖、訪談紀錄或其他任意組合 | 目前有的材料即可，不必等到全部齊全 | 盤點每份材料、互相核對流程／欄位／規則，找出衝突與缺口，再針對缺口訪談 |
-| **③ 繼續既有 run** | 先前已開始蒸餾，現在要接續或新增材料 | RUN 名稱或目錄，以及新增材料（如有） | 讀取目前狀態，接續未完成工作；新材料併入既有證據 |
+| 最終要回答的問題 | 看哪裡 |
+| --- | --- |
+| 這份知識為何重要，支援誰完成什麼任務？ | 工作範圍摘要、手冊的情境與任務 |
+| 看哪些線索、如何判斷、為什麼、何時例外？ | `handbook.md` 的規則、判斷、經驗與交接 |
+| 根據什麼來源，誰確認，哪些案例走查過？ | 手冊的來源與確認紀錄 |
+| 哪些已確認、哪些未知、哪些不在本次範圍？ | `coverage.md`、手冊範圍與缺口 |
 
-### ① 沒有材料：直接開始訪談
+**完成一次蒸餾的條件**：範圍與用途清楚、重要知識有來源、參與者確認目前版本、核心知識通過案例走查、限制明列，並建立 Knowledge Release（已確認範圍的知識版本）。一次 Release 不代表整個部門知識已蒸餾完畢。
 
-> 使用 $bu-knowledge-workflow。我目前沒有現成材料，想整理「＿＿部門的＿＿工作」。請從訪談開始，先幫我界定範圍，接著用實際案例挖出資深員工怎麼判斷、何時例外。這次先產出知識庫。
-
-如果重點是某位同事的經驗，可以把「＿＿部門的＿＿工作」換成「＿＿同事處理＿＿工作的經驗」。Codex 會保留這位專家的觀點與適用邊界，並把它連回部門任務。第一輪不會要求你先寫 PRD 或準備範本。
-
-### ② 有任何材料：一起盤點
-
-> 使用 $bu-knowledge-workflow。我想整理「＿＿工作」的知識。手邊有「＿＿」（列出所有現有文件、表單、流程圖、訪談紀錄等）。請先一起盤點，對照它們描述的步驟、欄位、分支與規則，標出一致、衝突和缺口，再只針對尚不清楚的判斷與例外訪談；這次先產出知識庫。
-
-例如，你**同時有表單與流程圖**時，可以直接說：「我有空白申請表、去識別的已填範例、訪談後的 `.drawio` 流程圖和會議筆記，請一起核對，不要只選其中一份當作入口。」只有文件、只有表單或只有流程圖也都可使用同一方式開始。
-
-表單能顯示欄位與輸出形式，不能單獨證明填寫依據；流程圖能呈現順序、分支和交接，不能單獨證明每個決策背後的理由。訪談筆記、案例或文件可補強，也可能與圖表互相矛盾。Codex 會保留各自的來源與未解處；不會把空白欄位或箭頭自行補成業務規則。`.drawio` 可使用 repo 內的解析工具，必要時再目視核對。
-
-`department-first` 和 `expert-first` 只是選擇從部門任務或個人經驗切入，和手上有哪些材料無關。兩種啟動方式的指令若需要 Skill，可將「這次先產出知識庫」改為「知識庫完成後，也產出支援＿＿任務的 Skill」；Codex 會先檢查知識是否足夠，再建置與測試。
-
-### ③ 續作與後續產生 Skill
-
-中斷後繼續：
-
-> 請繼續 runs 裡這個 RUN 的工作，先讀 state.yaml，告訴我目前完成到哪裡。
-
-產生 Skill 時：
-
-> 請用這個 Knowledge Release，產生支援指定任務的業務 Skill。先檢查知識是否足夠，列出適用範圍和需要人工判斷的地方，再建置與測試。
-
-環境中的 Skill 名稱相近時，請明確指定「使用這個 repository 的 `.agents/skills/bu-knowledge-workflow/SKILL.md`」。入口沿用舊版的明確呼叫設定，所以建議直接打 `$bu-knowledge-workflow`。
-
-第一次使用可請 Codex「依 README 建立 Python 環境並執行 check-repo」。你不用自己操作下方的技術指令。
-
-## 你會參與哪些步驟
-
-| 階段 | Codex 會做什麼 | 你主要做什麼 | 看什麼成果 |
-| --- | --- | --- | --- |
-| 界定範圍 | 盤點流程、任務、專家與材料 | 說明目的，確認先處理哪個任務 | engagement 與 context 摘要 |
-| 擷取證據 | 讀材料，進行 ACTA 訪談 | 提供具體事件、判斷理由與反例 | 訪談紀錄、來源與缺口 |
-| 建立模型 | 整理概念、推理、任務、交接、專家視角 | 修正不符合業務的理解 | handbook 草稿 |
-| 檢驗知識 | 核對來源，帶你走案例 | 確認這個版本，檢查預期結果 | coverage、案例與確認紀錄 |
-| 發布知識 | 建立本機 Knowledge Release | 查看已知限制 | handbook、模型與版本索引 |
-| 衍生產品（選用） | 建立 Skill/SOP 等，測試目標情境 | 指明產品用途，檢查產出 | artifact、追溯及測試結果 |
-
-發布知識後即可結案。如果你先前已要求 Skill，流程會接著處理，不要求你重新回答已確認的問題。訪談和建模可以來回進行，不必等所有資料完整才看到成果。
-
-## 方法論：為什麼這樣設計
-
-### CommonKADS：整體骨架
-
-CommonKADS 提供把專家知識建模的方式。本專案採輕量改編，保留「業務情境、知識模型、溝通交接、後續產品設計」的關係。
-
-核心知識分成三層：Domain 說明業務概念與規則；Inference 說明如何由資訊形成判斷；Task 說明何時、按什麼順序使用這些判斷。如此才能同時保存「知道什麼」、「如何判斷」及「如何完成工作」。
-
-例如只記「先檢查資料再決定」不夠。模型需要進一步保留：需要哪些資料、看什麼線索、為何支持某個結論、資料矛盾時如何處理、何時停止，以及下一個動作。
-
-### ACTA：訪談資深員工的方法
-
-Applied Cognitive Task Analysis 用來挖出通常不會寫進 SOP 的知識。Codex 先畫任務草圖，找出最需要經驗的地方，再從實際事件追問關鍵線索、替代方案、理由、新手錯誤及反例，整理成 cognitive demands table。
-
-不是每項工作都要問完所有題目。訪談根據材料與知識缺口深入；假設情境與真實案例分開標示。詳細題目見 [ACTA 訪談設計](.agents/skills/elicit-business-knowledge/references/acta.md)。
-
-### KCS：讓知識能重用與修正
-
-採用工作中擷取、先搜尋已有知識、保存適用情境、使用後回饋的原則。新訪談會先比對既有知識 ID，判斷是補充、修正、不同適用情境或來源衝突。
-
-### APQC 與 Distilly：輔助參考
-
-APQC 的知識循環用於範圍盤點及回饋流程；Distilly 提供多來源蒸餾、保留專家方法及增量更新的參考。主架構採 CommonKADS；Expert Perspective 是本專案增加的模型，保留個人經驗並連到部門任務。
-
-原始來源及具體取捨見 [架構與方法論說明](docs/architecture.md)。本專案不宣稱完整實作或通過上述方法論的認證。
-
-## 整體架構
+## 先看資料怎麼流
 
 ```mermaid
 flowchart TD
-    A[文件、訪談、案例、操作觀察] --> B[Evidence：有來源位置的證據]
-    B --> C[知識模型：Domain、Inference、Task]
-    B --> D[Context、Communication、Expert Perspective]
-    C --> E[參與者確認與案例走查]
-    D --> E
-    E --> F[Knowledge Release：知識庫與手冊]
-    F --> G[可選：指定產品目標並檢查知識涵蓋]
-    G --> H[Skill、SOP、Prompt、Script]
-    H --> I[產品行為測試]
-    I --> J[使用回饋]
-    F --> J
-    J --> B
+    A[文件、表單、流程圖、訪談與案例] --> B[原始材料或引用：runs/RUN/input]
+    B --> C[有來源位置的證據：runs/RUN/evidence]
+    C --> D[整理中的知識：runs/RUN/draft]
+    D --> E[參與者核對與案例走查：runs/RUN/review]
+    E -->|修正理解| D
+    D -->|補來源或追問| C
+    E -->|確認後本機發布| F[部門知識庫：knowledge/部門/領域/releases/版本]
+    F --> G[閱讀手冊、查知識、帶新人、處理案例]
+    G -->|新材料或修正，建立新草稿| C
+    F -.->|有需要才產生| H[選用應用：solutions/名稱]
 ```
 
-原始材料是來源，模型是整理後的知識，Release 是確認過範圍的版本，Skill 等是使用該版本的產品。Python 工具不會自動理解訪談或決定業務規則；這些由 Codex 與參與者一起完成。
+Codex 在流程中閱讀、追問與建模；Python 工具負責檔案格式、引用、渲染與發布檢查。各 Skill 是同一工作流程中的方法分工，不是十個自動並行的 Agent。
 
-### 資深員工的個人知識放哪裡？
-
-同時支援 department-first 和 expert-first。專家的線索、心智模型、經驗法則、新手易錯處及限制存於 expert-perspectives，再連結相關 task/inference。
-
-知識可以是 shared（有獨立來源支持並確認共同適用）、attributed（具名專家的方法）、contested（觀點衝突）。個人方法可用來產生明確標示該專家方法的 Skill，但不自動變成部門政策。
-
-## 每個 Skill 的用途
-
-| Skill | 責任 | 主要產出 |
+| 你參與的步驟 | 輸入 → 輸出 | 你要做什麼 |
 | --- | --- | --- |
-| [bu-knowledge-workflow](.agents/skills/bu-knowledge-workflow/SKILL.md) | 總入口、讀取進度、路由與續作 | state 與工作交接 |
-| [frame-knowledge-engagement](.agents/skills/frame-knowledge-engagement/SKILL.md) | 定義目的、範圍、任務優先序與來源 | engagement、context 草稿 |
-| [elicit-business-knowledge](.agents/skills/elicit-business-knowledge/SKILL.md) | 讀文件、ACTA 訪談、案例及觀察 | evidence、認知需求表、缺口 |
-| [model-business-knowledge](.agents/skills/model-business-knowledge/SKILL.md) | 建立模型、去重、保留歸屬與衝突 | canonical YAML、handbook 草稿 |
-| [validate-knowledge-release](.agents/skills/validate-knowledge-release/SKILL.md) | 核對、案例走查、確認及本機發布 | review、Knowledge Release |
-| [build-knowledge-solution](.agents/skills/build-knowledge-solution/SKILL.md) | 檢查指定範圍，建產品並驗證 | target、artifact、traceability、測試 |
+| 1. 界定範圍 | 部門目的、候選任務、現有材料 → `engagement.yaml`、情境草稿 | 確認哪個任務重要、誰會使用 |
+| 2. 擷取與整理 | 原始材料／訪談 → 證據 → `draft/` 模型與手冊草稿 | 補充具體事件、線索、理由及例外 |
+| 3. 核對與案例走查 | 草稿＋來源＋案例 → 修正、缺口、確認紀錄 | 核對理解，用案例檢查判斷 |
+| 4. 發布與使用 | 已確認草稿 → `knowledge/` 的 Release、手冊、涵蓋說明 | 閱讀、使用並提供修正 |
 
-四個媒體 Skill 只在材料需要時使用，不是每次都要走的階段：
+步驟 2 可邊訪談邊建模；步驟 3 發現缺口就回去補。每次交接由 Codex 說明「讀了什麼、寫到哪裡、還缺什麼、下一步做什麼」，並更新 `state.yaml` 供中斷續作。逐階段的 INPUT／OUTPUT、檔案格式與完成條件見 [MVP 開發規格書](docs/development-spec.md)；完整流向見 [架構說明](docs/architecture.md#各階段的-data-flow)。
 
-| Skill | 用途 | 限制 |
-| --- | --- | --- |
-| [prepare-audio-evidence](.agents/skills/prepare-audio-evidence/SKILL.md) | 轉錄或整理既有逐字稿、保存時間碼 | 口述不能證明畫面操作；不保證辨識 speaker |
-| [extract-video-evidence](.agents/skills/extract-video-evidence/SKILL.md) | 長影片選段、畫格與時間軸 | 挑選範圍須覆蓋問題所需情境 |
-| [analyze-video-evidence](.agents/skills/analyze-video-evidence/SKILL.md) | 從選取片段抽取操作與判斷證據 | 中間 JSON 需再映射到模型 |
-| [record-bu-walkthrough](.agents/skills/record-bu-walkthrough/SKILL.md) | Windows 上錄製具口述的 walkthrough | 先取得畫面與麥克風同意；Game Bar 有視窗限制 |
+## 怎麼開始
 
-文件／browser adapter 的使用方式在 [來源路由](.agents/skills/elicit-business-knowledge/references/adapters.md)。四個媒體 workers 保留獨立可發現目錄，沒有額外的 adapters 假 Skill。
+在 Codex 開啟本 repository，使用 **`$bu-knowledge-workflow`**。沒有材料就從訪談開始；有任意材料就一起盤點，再補訪談。文件、表單、流程圖與訪談紀錄可同時提供。
 
-## 每個資料夾的用途
+沒有現成材料：
 
-```text
-.agents/skills/    Codex 使用的技能指令和媒體工具
-docs/             架構、資料格式、改造紀錄、驗證說明
-schemas/          檢查 YAML 形狀的規格
-scripts/          本機建立工作區、驗證、渲染、發布等工具
-tests/            合成案例與錯誤情境的自動化測試
-examples/         完全虛構的示範來源與可重現示範
-runs/             每次實際蒸餾的工作區（執行時建立，Git 忽略）
-knowledge/        部門知識庫與版本（目前只有說明）
-solutions/        知識衍生產品（目前只有說明）
-.venv/            本機 Python 依賴（Git 忽略）
-```
+> 使用 $bu-knowledge-workflow。我想整理「＿＿部門的＿＿工作」。請先界定重要知識的範圍，再從實際案例訪談，整理判斷理由、例外與交接；這次產出部門知識庫。
 
-Skill 裡的 `SKILL.md` 是行為指令；`agents/openai.yaml` 是顯示名稱與呼叫設定；`references/` 是按需讀取的詳細方法；`scripts/` 是可執行小工具。BU 使用者通常不需修改這些檔案。
+已有材料：
 
-### 一次工作：runs
+> 使用 $bu-knowledge-workflow。我想整理「＿＿工作」，已有「＿＿文件、表單、流程圖、訪談筆記等」。請一起盤點、交叉核對，找出重要知識與缺口，再針對缺口訪談，產出部門知識庫。
 
-| 路徑 | 用途 |
+接續既有工作：
+
+> 請繼續 runs 裡的「＿＿RUN」，先讀 state.yaml，說明目前成果與下一步。
+
+也可以從某位資深同事的經驗切入，Codex 會保留專家歸屬並連回部門任務。`department-first`／`expert-first` 只表示切入視角，不影響材料類型，也不用你先選技術模式或寫 PRD。
+
+表單能顯示欄位，流程圖能顯示分支，但兩者未必說明判斷理由。Codex 會保留未知與衝突，不自行把欄位或箭頭補成業務規則。`.drawio` 有現成解析工具；其他材料依可用工具閱讀。
+
+若環境出現同名 Skill，請指定「使用這個 repository 的 `.agents/skills/bu-knowledge-workflow/SKILL.md`」。第一次使用可請 Codex「依 README 建立 Python 環境並執行 check-repo」。
+
+## 方法論為什麼適合
+
+| 設計問題 | 依據與採用方式 |
 | --- | --- |
-| state.yaml | 目前階段、下一步、待回答問題；供中斷續作 |
-| engagement.yaml | 目標、參與者、範圍、來源及優先理由 |
-| input/ | 原始材料或其明確引用，避免改寫來源 |
-| evidence/ | 訪談、擷取、觀察、音訊與影片中間產物 |
-| draft/ | 尚在整理的模型，使用 release 相同格式 |
-| review/ | 確認原始紀錄、案例走查及修正紀錄 |
+| 先保存哪些重要知識？ | **APQC** 的知識盤點與轉移優先序：連到業務影響、持有人與使用者，在 frame 選定範圍 |
+| 怎麼問出文件沒寫的判斷？ | **ACTA**：先理解任務，再追問具體事件中的線索、理由、反例與新手易錯處 |
+| 如何整理成可理解、可重用的知識？ | **CommonKADS**：區分概念規則、判斷、任務和交接，保留情境與專家歸屬 |
+| 使用後如何繼續改善？ | **KCS**：先查已有知識，重用、補來源、修正，再發布新版本 |
 
-### 知識版本：knowledge
+Codex 是執行者，參與者提供業務經驗並確認理解。實際工作是「選定重要任務 → 讀材料與追問 → 整理知識 → 核對與使用 → 回饋修訂」。這些方法提供設計依據；它們本身不能證明 Codex 自動蒸餾的品質。
+
+本專案使用輕量改編：Context 整理部門情境；Domain 保存概念與規則；Inference 保存由線索形成判斷的理由；Task 保存工作順序與停止條件；Communication 保存交接；Expert Perspective 保存具名經驗。這些是檔案分類，不是六個必須各跑一次的流程，也不是 CommonKADS 原版六模型的直接複製。
+
+逐項設計與方法論／公開 Agent 專案的關係，見 [設計與來源對照](docs/reference-map.md)。方法論的原始來源與適用限制見 [研究與設計依據](docs/architecture.md#研究與設計依據)；高星 GitHub 專案的原始操作檔、採用範圍與限制見 [Agent 實作參考](docs/github-agent-practice.md)。這些是設計依據，完整流程的效果仍需真實部門試點。
+
+## 每個 Skill 的輸入與輸出
+
+**主流程是 1 個入口＋4 個階段 Skill**。平常只需呼叫入口。
+
+| Skill | 讀取什麼 | 做什麼／寫出什麼 |
+| --- | --- | --- |
+| [bu-knowledge-workflow](.agents/skills/bu-knowledge-workflow/SKILL.md) | 使用者目的、既有 state／engagement | 決定下一步、更新 `state.yaml`、交付進度 |
+| [frame-knowledge-engagement](.agents/skills/frame-knowledge-engagement/SKILL.md) | 業務目的、任務、來源、既有知識索引 | 確定重要任務與用途，建立 `engagement.yaml`、`draft/context.yaml` |
+| [elicit-business-knowledge](.agents/skills/elicit-business-knowledge/SKILL.md) | `input/`、訪談、既有知識與缺口 | 寫 `evidence/`；更新草稿的 `evidence-index.yaml`、`gaps.yaml` |
+| [model-business-knowledge](.agents/skills/model-business-knowledge/SKILL.md) | 證據、候選主張、既有模型 | 整理 `draft/` 知識、來源與依賴；產生手冊草稿 |
+| [validate-knowledge-release](.agents/skills/validate-knowledge-release/SKILL.md) | 草稿、來源、案例、參與者回覆 | 留存 `review/` 原始紀錄、更新 `draft/review.yaml`，發布至 `knowledge/` |
+
+**1 個選用應用 Skill**：
+
+| Skill | 啟動時機 | 輸入 → 輸出 |
+| --- | --- | --- |
+| [build-knowledge-solution](.agents/skills/build-knowledge-solution/SKILL.md) | 已要求把知識做成可使用的產品 | Release＋指定用途 → `solutions/` 的 Skill、SOP、Prompt、Script 或查詢介面及測試紀錄 |
+
+**4 個選用媒體 Skill**，只在擷取證據時按材料需要使用：
+
+| Skill | 輸入 → 輸出 |
+| --- | --- |
+| [record-bu-walkthrough](.agents/skills/record-bu-walkthrough/SKILL.md) | 具名操作缺口＋畫面／麥克風同意 → `evidence/recordings/` 影片 |
+| [prepare-audio-evidence](.agents/skills/prepare-audio-evidence/SKILL.md) | 音訊或逐字稿 → `evidence/audio/<id>/` 的時間碼證據包 |
+| [extract-video-evidence](.agents/skills/extract-video-evidence/SKILL.md) | 影片及可用逐字稿 → `evidence/video/<id>/evidence-package/` 片段／畫格 |
+| [analyze-video-evidence](.agents/skills/analyze-video-evidence/SKILL.md) | 已選片段／畫格 → `evidence/video/<id>/analysis/` 候選主張，回交 elicit |
+
+音訊口述不能單獨證明畫面操作；影片分析 JSON 也是中間證據，須核對後再建模。文字訪談與文件可直接完成蒸餾。詳細媒體路由見 [來源處理](.agents/skills/elicit-business-knowledge/references/adapters.md)。
+
+## 每個資料夾的作用
+
+| 資料夾 | 裝什麼 | 何時需要看 |
+| --- | --- | --- |
+| `runs/` | 每次蒸餾的材料、草稿、確認與進度 | 工作進行中或續作；預設 Git 忽略 |
+| `knowledge/` | 已發布的部門知識版本與索引 | 找交付的手冊與知識；「發布」是本機保存 |
+| `solutions/` | 選用的知識應用及其來源映射、測試 | 有要求衍生應用時 |
+| `.agents/skills/` | Codex 如何做蒸餾的方法指令與媒體工具 | 檢視／調整蒸餾方法時 |
+| `docs/` | 架構與研究依據、資料契約、驗證及改造紀錄 | 想了解設計與限制時 |
+| `schemas/` | 四種 YAML 契約：工作、證據、Release、產品目標 | Codex 或程式檢查資料形狀時 |
+| `scripts/` | 建工作區、檢查、產生手冊、發布等本機工具 | Codex 執行工具時 |
+| `tests/` | 工具與契約的自動化測試 | 修改程式或契約時 |
+| `examples/` | 明確標示虛構的來源與可重現示範 | 熟悉資料格式時 |
+| `.venv/` | 本機 Python 環境 | 執行工具時；預設 Git 忽略 |
+
+你主要看 `runs/` 的工作進度，以及 `knowledge/` 的手冊與涵蓋說明。Skill 目錄內的 `SKILL.md` 是指令、`references/` 是按需閱讀的方法、`scripts/` 是工具、`agents/openai.yaml` 是名稱與呼叫設定。
+
+一次工作的固定結構：
 
 ```text
+runs/<RUN>/
+  engagement.yaml   要保存什麼、為何重要、誰提供／使用、現有材料
+  state.yaml        目前階段、下一步、待回答問題、發布位置
+  input/            原始材料副本或明確引用
+  evidence/         訪談紀錄、擷取片段與候選主張
+  draft/            可修改的知識 YAML、手冊、涵蓋說明與確認摘要
+  review/           確認對話／案例結果的原始紀錄、修正紀錄
+
 knowledge/<department>/<domain>/
-  index.yaml
+  index.yaml        這個領域的版本索引
   releases/<release-id>/
-    manifest.yaml
-    context.yaml
-    domain.yaml
-    inference.yaml
-    task.yaml
-    communication.yaml
-    expert-perspectives.yaml
-    cases.yaml
-    evidence-index.yaml
-    gaps.yaml
-    review.yaml
-    handbook.md
-    coverage.md
-    release-lock.yaml
+    handbook.md     先讀：部門知識手冊
+    coverage.md     再讀：確認狀態與缺口
+    *.yaml          模型、來源索引、範圍、案例、確認及檔案指紋
 ```
 
-最先看 **handbook.md**：它包含業務主張、理由、步驟、歸屬及來源。再看 **coverage.md**：哪些內容已確認、哪些仍有缺口。`manifest.yaml` 說明這版範圍；`gaps.yaml` 記未知和衝突；`review.yaml` 記誰確認了哪個版本及案例結果。
+YAML 是維護中的知識內容，手冊是它的閱讀形式。你可用自然語言要求修正；Codex 回填模型，再產生手冊。`publish` 複製已確認內容到新 Release，不搬走原始材料、不覆蓋舊版本，也不執行 Git push。其他人若需要核對來源，仍需能取得 `runs/` 或引用的原始材料。
 
-YAML 是主要知識來源，handbook 由它產生。不要只改 handbook；可以直接告訴 Codex：「這段判斷有問題，請修正知識模型並更新手冊。」
+`review/` 放原始確認證據；`draft/review.yaml` 放可被工具檢查的摘要與來源定位。所有 YAML 的作用與更新規則見 [檔案分工](docs/architecture.md#知識檔案分工) 和 [資料契約](docs/data-contract.md)。
 
-Release 是本機 snapshot。publish 拒絕覆蓋同 ID，hash 清單可偵測檔案變動；它不是安全簽章或自動 Git 版本。更正時產生新版本並記 base_release。原始來源若留在被 Git 忽略的 runs，其他人可能只能看到引用/摘錄，需另提供授權材料才能核對。
+## 如何判斷成果可信
 
-### 衍生產品：solutions
+來源支持方式與確認狀態分開記錄：`observed` 是可觀察證據，`stated` 是明確陳述，`inferred` 是推論；衝突與資料不足另行標示。`participant-confirmed` 表示參與者確認，`scenario-tested` 表示有目前版本的通過案例。
 
-每個產品有 target.yaml（要做什麼）、artifact/（實際產品）、traceability.yaml（用到哪些知識）、validation.md（怎麼測、測到什麼及限制）。Generated Skill 不會自動安裝到個人環境或執行真實業務操作。
+具名經驗保留 `attributed`；共同適用需支持與確認才能用 `shared`；分歧保留 `contested`。個人經驗可以是部門的重要資產，但不自動成為部門政策。重要的未知知識仍須保留在草稿與缺口，直到補足或明確調整發布範圍。
 
-## Knowledge Release 何時足以產生 Skill？
+格式檢查只證明資料契約與引用一致。Release 需要真實確認；所有 `critical=true` 核心物件需要案例走查。案例通過只支持測過的情境，不能代表全部業務情境。MVP 試點還要用未參與建模的案例或實際使用者回饋，檢查這份知識是否真的可用。
 
-先指定產品目標，工具沿任務的 refs 找出全部依賴，再檢查確認狀態、來源性質、專家歸屬、未知欄位及 blocking gap。
+目前有 10 個方法 Skill、檔案型知識庫、驗證與發布工具，以及合成示範；尚無真實部門試點。媒體工具尚未完成實際錄製／轉錄驗證。採單一 Codex 工作流程維護本機檔案；網站、資料庫、向量搜尋、帳號與正式審批不在此 MVP 範圍。詳見 [驗證紀錄](docs/validation.md)。
 
-| 結果 | 意義 | 下一步 |
-| --- | --- | --- |
-| ready | 所選必要及選用任務的知識都可用 | 建產品，再驗證工具及行為 |
-| limited-scope | 必要任務可用，部分選用任務不足 | 明列排除部分，建立有限範圍產品 |
-| knowledge-gap | 任一必要任務缺知識 | 補訪談/資料或由使用者調整目標 |
+## 選用：從知識產生應用
 
-Release 提供業務內容，Codex 還要做產品設計：觸發方式、使用者輸入、輸出格式、工具、人工停點與 reference 編排。此步驟不能新增未有依據的業務規則。
+> 請用「＿＿Knowledge Release」產生支援「＿＿任務」的 Skill，保留來源、適用邊界與人工判斷點，並測試實際回答。
 
-ready 只代表知識足夠。advisory Skill 可以協助判斷；execution Skill 若要操作系統，仍要有可用工具、權限及實際執行測試。詳見 [轉換契約](.agents/skills/build-knowledge-solution/references/solution-contract.md)。
+Codex 先檢查指定任務的知識及依賴是否齊全，再建立 `solutions/<name>/target.yaml`（用途）、`artifact/`（產品）、`traceability.yaml`（知識映射）、`validation.md`（測試與限制）。`ready` 代表知識足夠；實際操作工具的能力仍須另外測試。生成的 Skill 不自動安裝或操作業務系統。
 
-## 如何判斷成果可信到什麼程度
+既有 Skill 也可作為待核對的材料；只有能追溯來源、符合本次範圍的業務內容才納入模型。它的提示詞、工具設定不自動成為部門業務規則。詳見 [轉換契約](.agents/skills/build-knowledge-solution/references/solution-contract.md)。
 
-- observed：來源可直接觀察此主張；仍需核對解讀。
-- stated：參與者明確陳述；不代表有畫面證明。
-- inferred：Codex 推論，仍待支持。
-- conflicting：來源互相衝突。
-- unresolved：資料不足。
+## 工具指令（可交給 Codex 執行）
 
-確認另有 draft、participant-confirmed、scenario-tested。Release 最少需要參與者對目前版本的確認；重要判斷需至少一個案例走查。可以保留明列的非核心缺口，產品若依賴這些缺口則無法 ready。
-
-**格式通過 ≠ 知識正確；知識確認 ≠ Skill 行為已測；案例通過 ≠ 所有情況都正確。** 你應要求 Codex 說清楚測試方法、expected、actual、來源及尚未測到的範圍。數量統計不等於部門涵蓋率。
-
-## MVP 有什麼、還沒有什麼
-
-已有：檔案型知識庫、六模型、ACTA 訪談指引、專家歸屬、來源/缺口、確認版本、案例紀錄、手冊、coverage、可選產品流程與檢查工具。
-
-尚未加入：網站 UI、搜尋服務、向量資料庫、RAG API、正式審批、權限管理與定期維運治理。知識理解與 Skill 編寫由 Codex 執行，並非 Python 自動生成任意產品。真實部門效果待後續試點；本次只驗證合成案例及技術契約。
-
-## 技術操作（交給 Codex 執行即可）
-
-核心工具需要 Python 3.10+、PyYAML、jsonschema。從 repo 根目錄執行；macOS/Linux 將 `.venv/Scripts/python.exe` 換成 `.venv/bin/python`。
+需要 Python 3.10+、PyYAML、jsonschema。Windows 在 repo 根目錄執行；macOS/Linux 將 Python 路徑改為 `.venv/bin/python`。
 
 ```powershell
 python -m venv .venv
@@ -236,41 +181,20 @@ python -m venv .venv
 .venv/Scripts/python.exe -m unittest discover -s tests -v
 ```
 
+以下子命令皆接在 `.venv/Scripts/python.exe scripts/knowledge_workflow.py` 後：
+
 | 指令 | 用途 |
 | --- | --- |
-| init --department team --domain area | 建立空 run，表示目前沒有材料；不會填入或確認業務知識 |
-| init --department team --domain area --source-type form --source-type process-map | 建立同時有表單與流程圖的 run；每種材料類型可各加一個 `--source-type`，具體檔案後續記入 resources |
-| validate <draft> | 檢查格式、ID、來源與依賴 |
-| digest <draft> | 取得目前模型指紋 |
-| render <draft> | 產生 handbook、coverage |
-| validate <draft> --release | 再檢查目前版本確認及核心案例 |
-| publish <draft> --library knowledge/team/area | 建新本機 snapshot 和索引 |
-| coverage <release> <target.yaml> | 檢查指定產品的完整知識依賴 |
-| verify-solution <release> <solution-dir> | 檢查產品追溯與測試紀錄契約 |
-| check-repo | 檢查 Skill 結構、reference 連結及 schema |
+| `init --department team --domain area` | 建立空 run；有材料可重複加 `--source-type form`、`--source-type process-map` 等 |
+| `validate <draft>` | 檢查格式、來源與引用 |
+| `render <draft>` | 產生手冊與涵蓋說明 |
+| `digest <draft>` | 取得目前模型指紋，綁定確認版本 |
+| `validate <draft> --release` | 檢查目前版本確認、核心知識與案例 |
+| `publish <draft> --library knowledge/team/area` | 建立新本機 Release 並更新索引 |
+| `coverage <release> <target.yaml>` | 選用：檢查指定應用的知識是否足夠 |
+| `verify-solution <release> <solution-dir>` | 選用：檢查應用映射與測試紀錄契約 |
+| `check-repo` | 檢查方法 Skill、schema 及文件引用 |
 
-退出碼：0 通過，1 格式/契約/檔案問題，coverage 的 2 表示 knowledge-gap。這些指令不會自動從一個 stage 跳到下一個，state 由 Codex 隨工作更新。
+退出碼：0 通過、1 檢查失敗；`coverage` 的 2 表示 knowledge-gap。工具不自動訪談或跳階段，進度由 Codex 維護。音訊／影片依材料需要另準備工具，不是核心安裝的必要條件。
 
-媒體能力選用安裝，核心文件/文字訪談不需要。影片工具通常需 ffmpeg/ffprobe、Pillow；本機轉錄另需 faster-whisper 及可用模型。詳細依各 worker reference；不在核心 requirements 強制安裝大型模型。本次沒有實際錄音錄影測試。
-
-## 合成示範與驗證
-
-見 [synthetic example](examples/synthetic/README.md)。它使用完全虛構的標籤卡片案例，示範 source → model → release → advisory Skill 的資料關係；確認及走查紀錄明確標成合成資料，不代表真人驗證。自動測試覆蓋來源遺失、未解推論、過期確認、依賴缺口、專家未選、發布覆蓋與快照變更等情境。
-
-## 常見問題
-
-**一定要先有完整文件嗎？** 不用。可以從資深員工的具體事件開始；缺口會被保留，逐步補足。
-
-**文件和資深員工說法不一樣？** 保存各自來源與適用情境，列為 conflict。Codex 不自行替部門裁決。
-
-**我可以只要知識庫嗎？** 可以，Release 的 handbook/index 已是成果。後續想做 Skill 再指定範圍即可。
-
-**沒有全部回答，能不能產生初稿？** 可以。發布前確認範圍、核心知識與案例，其他缺口清楚標示。
-
-**需要自己改 YAML 嗎？** 不需要。用自然語言要求修正；Codex 負責更新模型、引用、手冊及受影響測試。
-
-**publish 會上 GitHub 嗎？** 不會。它只建立本機版本。runs 預設不進 Git；knowledge/solutions 可被追蹤，但 commit/push 前要確認內容適合 repo 的可見範圍。
-
-**舊 Skill 去哪裡？** 舊的四個主流程 Skill 已由新分工取代；媒體程式保留並調整介面。移除內容仍可由 Git 基準版本找回，見 [改造紀錄](docs/migration.md)。
-
-進一步閱讀：[架構與來源](docs/architecture.md) · [資料契約](docs/data-contract.md) · [流程狀態](.agents/skills/bu-knowledge-workflow/references/workflow.md) · [改造紀錄](docs/migration.md) · [本次驗證與限制](docs/validation.md)。
+進一步閱讀：[MVP 開發規格書](docs/development-spec.md) · [設計與來源對照](docs/reference-map.md) · [架構與研究依據](docs/architecture.md) · [GitHub Agent 實作參考](docs/github-agent-practice.md) · [資料契約](docs/data-contract.md) · [流程狀態](.agents/skills/bu-knowledge-workflow/references/workflow.md) · [驗證紀錄](docs/validation.md) · [合成示範](examples/synthetic/README.md) · [舊版改造紀錄](docs/migration.md)。

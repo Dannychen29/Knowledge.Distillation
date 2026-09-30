@@ -12,6 +12,8 @@ venv/
 
 # Raw business material and working sessions stay local.
 runs/
+# Local fictional end-to-end test output; never publish as department knowledge.
+knowledge/fictional-commercial-banking/
 .tmp/
 .pytest_cache/
 # knowledge/ and solutions/ are opt-in content: inspect before committing.
